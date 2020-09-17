@@ -1,0 +1,48 @@
+{
+  "name": "node.js-starter-boilerplate",
+  "version": "1.0.0",
+  "description": "Node.js starter boilerplate",
+  "main": "index.js",
+  "scripts": {
+    "start": "node -r esm src/app.js",
+    "start-dev": "nodemon -r esm src/app.js",
+    "test": "jest --forceExit --detectOpenHandles  --watchAll --maxWorkers=1"
+  },
+  "keywords": [
+    "node.js",
+    "boilerplate",
+    "boilerplate",
+    "node.js",
+    "starter"
+  ],
+  "author": "Ahmet Buğra Çakıcı",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "helmet": "^4.1.0",
+    "jest-esm-transformer": "^1.0.0",
+    "joi": "^17.2.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.10.0",
+    "morgan": "^1.10.0",
+    "nodemailer": "^6.4.11",
+    "pino": "^6.5.1",
+    "pino-pretty": "^4.2.0",
+    "randomstring": "^1.1.5",
+    "redis": "^3.0.2",
+    "swagger-jsdoc": "^4.0.0",
+    "swagger-ui-express": "^4.1.4"
+  },
+  "devDependencies": {
+    "eslint": "^7.7.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.0",
+    "jest": "^26.4.2",
+    "supertest": "^4.0.2"
+  }
+}
