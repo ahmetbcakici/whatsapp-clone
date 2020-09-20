@@ -3,7 +3,7 @@ interface Action {
   payload: object;
 };
 
-const user = (state: object, action: Action) => {
+const user = (state: object = {}, action: Action) => {
   const { type, payload } = action;
 
   switch (type) {

@@ -1,25 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState, Fragment } from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { Homepage } from './views';
+import * as userActions from './store/actions/user.actions'
 
 function App() {
+  const dispatch = useDispatch();
+  /* @TODO: remove tsignore */
+  // @ts-ignore
+  const user = useSelector((state) => state.userReducer);
+
+  useEffect(() => {
+    const jwt = localStorage.getItem('jwt');
+
+    if (!jwt) return;
+
+    (async function () {
+      try {
+        await dispatch(userActions.auth(jwt));
+      } catch (error) {
+        console.log(error)
+      }
+    })()
+  }, [userActions.auth, dispatch]);
+
+  useEffect(() => {
+    console.log('user:%o', user)
+  }, [user])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Switch>
+        <Route path="/" component={Homepage} exact />
+        {/* <Route path="/*" component={404page} exact /> */}
+      </Switch>
+    </Router>
   );
 }
 
