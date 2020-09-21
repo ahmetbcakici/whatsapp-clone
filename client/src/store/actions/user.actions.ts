@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { ThunkDispatch } from 'redux-thunk';
 import { AnyAction } from 'redux';
+import { GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login'
 
 import { API_URL } from '../../config';
 
@@ -34,7 +35,7 @@ export const register = (name: string, surname: string, email: string, password:
       });
       localStorage.setItem('jwt', token);
       dispatch({ type: 'SET_USER', payload: user });
-      return resolve({user,token})
+      return resolve({ user, token })
     } catch (error) {
       return reject(error);
     }
@@ -43,40 +44,24 @@ export const register = (name: string, surname: string, email: string, password:
 export const auth = (token: string) => (dispatch: ThunkDispatch<{}, {}, AnyAction>) =>
   new Promise(async (resolve, reject) => {
     try {
-      const { data } = await axios.get(`${API_URL}/user`, {
+      const { data } = await axios.get(`${API_URL}/user/`, {
         headers: {
           'Authorization': token,
         },
       });
-      return dispatch({ type: 'SET_USER', payload: data });
+      dispatch({ type: 'SET_USER', payload: data });
+      return resolve();
     } catch (error) {
       return reject(error);
     }
   });
 
-export const responseGoogle = (response: any) => {
-  console.log('balo')
-  return (dispatch: any) => {
-    console.log('alo')
-    return new Promise(async (resolve, reject) => {
-
-      const { data } = await axios
-        .post(`${API_URL}/user/google`, { token: response.tokenId, type: 'login' })
-      console.log(data)
-      return resolve(data)
-    })
-  }
-}
-
-
-
-export const google = (response: any, type: string) => (dispatch: ThunkDispatch<{}, {}, AnyAction>) =>
+export const responseGoogle = (token: string, type: string) => (dispatch: ThunkDispatch<{}, {}, AnyAction>) =>
   new Promise(async (resolve, reject) => {
-    console.log('hiır')
     try {
-      const { data } = await axios.post(`${API_URL}/user/google`, { token: response.tokenId, type });
-      console.log(data)
-      return dispatch({ type: 'SET_USER', payload: data });
+      const { data } = await axios.post(`${API_URL}/user/google`, { token, type });
+      dispatch({ type: 'SET_USER', payload: data });
+      return resolve()
     } catch (error) {
       console.log(error)
       return reject(error);
