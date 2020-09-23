@@ -1,6 +1,6 @@
 import React from 'react'
 
-function ChatArea() {
+function SendMessageStick() {
   return (
     <div>
       
@@ -8,4 +8,4 @@ function ChatArea() {
   )
 }
 
-export default ChatArea
+export default SendMessageStick
