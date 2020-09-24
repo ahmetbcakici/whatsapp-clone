@@ -1,3 +1,7 @@
 export { default as HeaderStick } from './HeaderStick'
 export { default as MessagesList } from './MessagesList'
 export { default as SearchBar } from './SearchBar'
+export { default as Profile } from './Profile'
+export { default as Archived } from './Archived'
+export { default as Starred } from './Starred'
+export { default as UserSidebar } from './UserSidebar'

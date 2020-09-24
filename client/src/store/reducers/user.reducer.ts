@@ -1,27 +1,27 @@
 interface Action {
-  type: string;
-  payload: object;
-};
+  type: string
+  payload: object
+}
 
 const user = (state: object = {}, action: Action) => {
-  const { type, payload } = action;
+  const { type, payload } = action
 
   switch (type) {
     case 'SET_USER':
-      return payload;
+      return payload
 
     case 'UPDATE_USER':
       return {
         ...state,
         ...payload,
-      };
+      }
 
     case 'LOGOUT':
-      return null;
+      return null
 
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default user;
+export default user

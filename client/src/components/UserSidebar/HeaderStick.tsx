@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
 import { Col, Row, Dropdown } from 'react-bootstrap'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCoffee } from '@fortawesome/free-solid-svg-icons'
 
-function HeaderStick() {
+function HeaderStick({ setContent }: { setContent: Dispatch<SetStateAction<string>> }) {
   return (
     <Row>
       <Col sm={7}>
@@ -18,12 +18,12 @@ function HeaderStick() {
             <Dropdown.Toggle variant="success" id="dropdown-basic">
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item>New Group</Dropdown.Item>
-              <Dropdown.Item>Profile</Dropdown.Item>
-              <Dropdown.Item>Archived</Dropdown.Item>
-              <Dropdown.Item>Starred</Dropdown.Item>
-              <Dropdown.Item>Settings</Dropdown.Item>
-              <Dropdown.Item>Log out</Dropdown.Item>
+              <Dropdown.Item onClick={(e) => setContent(e.currentTarget.text)}>New Group</Dropdown.Item>
+              <Dropdown.Item onClick={(e) => setContent(e.currentTarget.text)}>Profile</Dropdown.Item>
+              <Dropdown.Item onClick={(e) => setContent(e.currentTarget.text)}>Archived</Dropdown.Item>
+              <Dropdown.Item onClick={(e) => setContent(e.currentTarget.text)}>Starred</Dropdown.Item>
+              <Dropdown.Item onClick={(e) => setContent(e.currentTarget.text)}>Settings</Dropdown.Item>
+              <Dropdown.Item onClick={(e) => setContent(e.currentTarget.text)}>Log out</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </span>
