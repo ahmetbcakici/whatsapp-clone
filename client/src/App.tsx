@@ -2,8 +2,10 @@ import React, { useEffect, useState, Fragment } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Homepage } from './views';
+import Welcome from './views/Welcome';
+import Homepage from './views/Homepage';
 import * as userActions from './store/actions/user.actions'
+import * as utils from './utils'
 
 function App() {
   const dispatch = useDispatch();
@@ -29,14 +31,11 @@ function App() {
     console.log('user:%o', user)
   }, [user])
 
-  return (
-    <Router>
-      <Switch>
-        <Route path="/" component={Homepage} exact />
-        {/* <Route path="/*" component={404page} exact /> */}
-      </Switch>
-    </Router>
-  );
+  // @TODO: rendering pages after spinners
+  if (!utils.isEmpty(user)) return <Homepage />
+
+  return <Welcome />
+  //return utils.isEmpty(user) ? <div>waiting</div> : <Homepage/>
 }
 
 export default App;
