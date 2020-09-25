@@ -1,12 +1,12 @@
 import bcrypt from 'bcryptjs'
 
-import { sendCodeToEmail, generateRandomCode } from '../../../utils'
+import { sendCodeToEmail } from '../../../utils'
 import { User } from '../../../models'
 import { emailSchema } from '../../validators/user.validators'
 
 export default async (req, res, next) => {
   const { email } = req.body;
-  const newPassword = generateRandomCode(8)
+  const newPassword = '123' //generateRandomCode(6)
 
   try {
     await emailSchema.validateAsync(req.body)

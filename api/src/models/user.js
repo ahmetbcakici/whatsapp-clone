@@ -1,6 +1,8 @@
 import bcrypt from 'bcryptjs'
 import { model, Schema } from 'mongoose'
 
+import { generateUserCode } from '../utils'
+
 const userSchema = new Schema({
   name: {
     type: String,
@@ -10,11 +12,6 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  username: {
-    type: String,
-    required: true,
-    lowercase: true
-  },
   email: {
     type: String,
     required: true,
@@ -23,18 +20,40 @@ const userSchema = new Schema({
   },
   password: {
     type: String,
-    required: true,
   },
   registerDate: {
     type: Date,
     default: Date.now,
-  }
+  },
+  code: {
+    type: Number,
+    unique: true
+  },
+  friendRequests: [{
+    userId: { type: Schema.Types.ObjectId, ref: 'User' },
+    type: {
+      type: String,
+      enum: ['Incoming', 'Outgoing']
+    }
+  }],
+  friends: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 })
 
 userSchema.pre('save', async function (next) {
   const user = this
-  user.password = await bcrypt.hash(user.password, 10)
-  next()
+  let code, count
+
+  do {
+    code = generateUserCode()
+    count = await User.countDocuments({ code })
+  } while (count)
+
+  user.code = code
+
+  if (user.password) {
+    user.password = await bcrypt.hash(user.password, 10)
+    next()
+  }
 })
 
 const User = model('User', userSchema)

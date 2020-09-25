@@ -1,13 +1,13 @@
 import jwt from 'jsonwebtoken'
 
-import { sendCodeToEmail, generateRandomCode } from '../../../utils'
+import { sendCodeToEmail } from '../../../utils'
 import { User } from '../../../models'
 import { emailSchema } from '../../validators/user.validators'
 import { api } from '../../../config'
 
 export default async (req, res, next) => {
   const { email } = req.body
-  const confirmCode = generateRandomCode(6)
+  const confirmCode = '123' //generateRandomCode(6)
 
   try {
     await emailSchema.validateAsync(req.body)
