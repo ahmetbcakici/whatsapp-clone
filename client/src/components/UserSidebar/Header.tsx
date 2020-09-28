@@ -3,7 +3,7 @@ import { Col, Row, Dropdown } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCoffee } from '@fortawesome/free-solid-svg-icons'
 
-function HeaderStick({ setContent }: { setContent: Dispatch<SetStateAction<string>> }) {
+function Header({ setContent }: { setContent: Dispatch<SetStateAction<string>> }) {
   return (
     <Row>
       <Col sm={7}>
@@ -18,6 +18,7 @@ function HeaderStick({ setContent }: { setContent: Dispatch<SetStateAction<strin
             <Dropdown.Toggle variant="success" id="dropdown-basic">
             </Dropdown.Toggle>
             <Dropdown.Menu>
+              <Dropdown.Item onClick={(e) => setContent(e.currentTarget.text)}>Friend Requests</Dropdown.Item>
               <Dropdown.Item onClick={(e) => setContent(e.currentTarget.text)}>New Group</Dropdown.Item>
               <Dropdown.Item onClick={(e) => setContent(e.currentTarget.text)}>Profile</Dropdown.Item>
               <Dropdown.Item onClick={(e) => setContent(e.currentTarget.text)}>Archived</Dropdown.Item>
@@ -33,4 +34,4 @@ function HeaderStick({ setContent }: { setContent: Dispatch<SetStateAction<strin
   )
 }
 
-export default HeaderStick
+export default Header

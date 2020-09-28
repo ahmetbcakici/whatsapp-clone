@@ -1,16 +1,18 @@
 import React, { useState } from 'react'
-import { HeaderStick, MessagesList, SearchBar, Archived } from './'
+import { Header, MessagesList, SearchBar, Archived, FriendRequests } from './'
 
 function UserSidebar() {
   const [content, setContent] = useState('')
 
   switch (content) {
+    case 'Friend Requests':
+      return <FriendRequests setContent={setContent} />
     case 'Archived':
       return <Archived setContent={setContent} />
     default:
       return (
         <div>
-          <HeaderStick setContent={setContent} />
+          <Header setContent={setContent} />
           <SearchBar />
           <MessagesList />
         </div>
