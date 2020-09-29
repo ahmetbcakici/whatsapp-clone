@@ -10,6 +10,8 @@ export default async (req, res, next) => {
   try {
     const verifiedToken = await jwt.verify(token, api.jwtSecretKey);
     req.user = verifiedToken.user;
+    if (true) return res.send(req.user)
+
     return next();
   } catch (e) {
     return res.status(403).send('Invalid token.');

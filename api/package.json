@@ -4,8 +4,7 @@
   "description": "Node.js starter boilerplate",
   "main": "index.js",
   "scripts": {
-    "start": "node -r esm src/app.js",
-    "start-dev": "nodemon -r esm src/app.js",
+    "start": "nodemon -r esm src/index.js",
     "test": "jest --forceExit --detectOpenHandles  --watchAll --maxWorkers=1"
   },
   "keywords": [
@@ -24,6 +23,7 @@
     "dotenv": "^8.2.0",
     "esm": "^3.2.25",
     "express": "^4.17.1",
+    "google-auth-library": "^6.0.6",
     "helmet": "^4.1.0",
     "jest-esm-transformer": "^1.0.0",
     "joi": "^17.2.1",

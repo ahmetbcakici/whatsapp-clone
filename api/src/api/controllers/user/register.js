@@ -7,7 +7,8 @@ import { api } from '../../../config'
 
 export default async (req, res, next) => {
   try {
-    await registerSchema.validateAsync(req.body)
+    // @TODO: uncomment validation
+    /* await registerSchema.validateAsync(req.body) */
 
     const user = await User.create(req.body)
     user.password = null // prevent send pw to client

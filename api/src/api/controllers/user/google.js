@@ -6,8 +6,6 @@ const client = new OAuth2Client(api.googleClientId);
 
 export default async (req, res) => {
   const { token, type } = req.body;
-  console.log(req.body)
-  console.log('gld')
 
   const data = await client.verifyIdToken({
     idToken: token,
@@ -32,3 +30,4 @@ export default async (req, res) => {
   }
   res.send(token);
 }
+// @TODO: error handling

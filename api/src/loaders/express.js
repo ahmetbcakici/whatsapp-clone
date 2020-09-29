@@ -6,6 +6,7 @@ import morgan from 'morgan'
 
 import { api, logger } from '../config'
 import routes from '../api/routes'
+import errors from '../api/errors'
 
 export default ({ app }) => {
   app.enable('trust proxy')
@@ -33,14 +34,27 @@ export default ({ app }) => {
 
   /// error handler
   app.use((err, req, res, next) => {
+    let errorsss;
+    errors.map(({ message, status, code }) => {
+      if (err === code) {
+        errorsss = {
+          message,
+          status,
+          documentation_url: err.documentation_url
+        }
+        res.json({ errorsss })
+      }
+    })
+    errors.find(error => error.code === )
+    console.log('--')
     res.status(err.status || 500)
-    const errors = {
+    errorsss = {
       status: err.status,
       message: err.message,
       documentation_url: err.documentation_url
     }
-    res.json({ errors })
-    logger.error(JSON.stringify({ errors }))
+    res.json({ errorsss })
+    //logger.error(JSON.stringify({ errors }))
     /* @TODO: specify req.ip in log */
   })
 }
