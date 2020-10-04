@@ -15,11 +15,7 @@ export default async (req, res, next) => {
     /* @TODO: invalid e-mail check */
 
     const existingEmailCount = await User.countDocuments({ email })
-    if (existingEmailCount) {
-      const err = new Error('This e-mail address already registered')
-      err['status'] = 403
-      return next(err)
-    }
+    if (existingEmailCount) return next('EMAIL_ALREADY_REGISTERED')
 
     console.log(confirmCode)
     /* await sendCodeToEmail({email, confirmCode}); */

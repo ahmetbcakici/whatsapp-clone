@@ -11,11 +11,7 @@ export default async (req, res, next) => {
 
     const { confirmCode } = await jwt.verify(token, api.jwtSecretKey)
 
-    if (code !== confirmCode) {
-      const err = new Error('Incorrect confirm code')
-      err['status'] = 403
-      return next(err)
-    }
+    if (code !== confirmCode) return next('INCORRECT_CONFIRM_CODE')
 
     return res.status(200).send()
   } catch (err) {

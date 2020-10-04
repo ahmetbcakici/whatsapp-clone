@@ -26,7 +26,7 @@ export default ({ app }) => {
 
   /// catch 404 and forward to error handler
   app.use((req, res, next) => {
-    const err = new Error('Not Found')
+    const err = new Error('Address Not Found')
     err['status'] = 404
     err['documentation_url'] = 'http://localhost:8080/api/docs'
     next(err)
@@ -34,27 +34,12 @@ export default ({ app }) => {
 
   /// error handler
   app.use((err, req, res, next) => {
-    let errorsss;
-    errors.map(({ message, status, code }) => {
-      if (err === code) {
-        errorsss = {
-          message,
-          status,
-          documentation_url: err.documentation_url
-        }
-        res.json({ errorsss })
-      }
-    })
-    errors.find(error => error.code === )
-    console.log('--')
-    res.status(err.status || 500)
-    errorsss = {
-      status: err.status,
-      message: err.message,
+    const error = errors.find(error => error.code === err)
+    const errorRes = {
+      message: error ? error.message : err.message,
+      status: error ? error.status : err.status,
       documentation_url: err.documentation_url
     }
-    res.json({ errorsss })
-    //logger.error(JSON.stringify({ errors }))
-    /* @TODO: specify req.ip in log */
+    return res.json({ error: errorRes })
   })
 }

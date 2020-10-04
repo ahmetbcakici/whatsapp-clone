@@ -9,12 +9,7 @@ export default async (req, res, next) => {
 
   try {
     const user = await User.findOne({ code })
-    if (!user) {
-      return next(1)
-      /* const err = new Error('User not found')
-      err['status'] = 404
-      return next(err) */
-    }
+    if (!user) return next('USER_NOT_FOUND')
   }
   catch (err) {
     return next(err)

@@ -12,18 +12,10 @@ export default async (req, res, next) => {
     await loginSchema.validateAsync(req.body)
 
     const user = await User.findOne({ email })
-    if (!user) {
-      const err = new Error('User not found')
-      err['status'] = 404
-      return next(err)
-    }
+    if (!user) return next('USER_NOT_FOUND')
 
     const match = await bcrypt.compare(password, user.password)
-    if (!match) {
-      const err = new Error('Incorrect password')
-      err['status'] = 401
-      return next(err)
-    }
+    if (!match) return next('INCORRECT_PASSWORD')
 
     user.password = null
     const token = await jwt.sign({ user }, api.jwtSecretKey)

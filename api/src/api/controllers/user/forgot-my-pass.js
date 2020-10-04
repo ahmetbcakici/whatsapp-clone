@@ -19,11 +19,7 @@ export default async (req, res, next) => {
       { new: true }
     );
 
-    if (!user) {
-      const err = new Error('There is no user with this e-mail address')
-      err['status'] = 403
-      return next(err)
-    }
+    if (!user) return next('NO_USER_WITH_THIS_EMAIL')
 
     console.log(newPassword)
     /* await sendCodeToEmail({email, newPassword}); */
