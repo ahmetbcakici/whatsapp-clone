@@ -5,8 +5,7 @@ import { api } from '../../config'
 export default async (req, res, next) => {
   const token = req.header('Authorization');
 
-  if (!token) return res.status(401).send('Unauthorized.');
-
+  if (!token) return next('UNAUTHORIZED')
   try {
     const verifiedToken = await jwt.verify(token, api.jwtSecretKey);
     req.user = verifiedToken.user;
@@ -14,6 +13,6 @@ export default async (req, res, next) => {
 
     return next();
   } catch (e) {
-    return res.status(403).send('Invalid token.');
+    return next('INVALID_TOKEN')
   }
 };

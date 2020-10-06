@@ -24,4 +24,19 @@ export default [
     status: 403,
     code: 'EMAIL_ALREADY_REGISTERED'
   },
+  {
+    message: 'A request already exists between you and the user',
+    status: 403,
+    code: 'REQUEST_ALREADY_EXISTING'
+  },
+  {
+    message: 'Unauthorized',
+    status: 401,
+    code: 'UNAUTHORIZED'
+  },
+  {
+    message: 'Invalid token',
+    status: 403,
+    code: 'INVALID_TOKEN'
+  },
 ]

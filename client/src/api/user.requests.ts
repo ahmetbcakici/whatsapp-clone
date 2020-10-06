@@ -8,3 +8,8 @@ export const sendFriendRequest = (code: number) =>
   axios.post(`${API_URL}/user/send-friend-request`, { code }, {
     headers: { 'Authorization': token }
   })
+
+export const getFriendRequests = () =>
+  axios.get(`${API_URL}/user/get-friend-requests`, {
+    headers: { 'Authorization': token }
+  })

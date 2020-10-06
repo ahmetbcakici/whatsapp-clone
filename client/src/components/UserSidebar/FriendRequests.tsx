@@ -1,22 +1,33 @@
 import React, { useState, useEffect, SetStateAction, Dispatch } from 'react'
 
 import { socket } from '../../config'
-import { sendFriendRequest } from '../../api/user.requests'
+import { sendFriendRequest, getFriendRequests } from '../../api/user.requests'
 
 function FriendRequests({ setContent }: { setContent: Dispatch<SetStateAction<string>> }) {
   const [code, setCode] = useState(0)
+  const [friendRequests, setFriendRequests] = useState([])
 
   useEffect(() => {
-    console.log('hia')
-    socket.on('x', () => {
-      console.log('x socket on')
+    handleGetFriendRequests()
+
+    socket.on('new-friend-request', () => {
+      handleGetFriendRequests()
     })
-  },[])
+  }, [])
+
+  const handleGetFriendRequests = async () => {
+    try {
+      const res = await getFriendRequests()
+      setFriendRequests(res.data.friendRequests)
+    } catch (error) {
+      console.log(error.response.data)
+    }
+  }
 
   const handleSendFriendRequest = async () => {
     try {
       const res = await sendFriendRequest(code)
-      console.log(res)
+      handleGetFriendRequests()
     } catch (error) {
       console.log(error.response.data)
     }
@@ -29,6 +40,16 @@ function FriendRequests({ setContent }: { setContent: Dispatch<SetStateAction<st
       <hr />
       <input type="text" onChange={(e) => setCode(parseInt(e.target.value))} />
       <input type="button" value="SUBMIT" onClick={handleSendFriendRequest} />
+      <ul>
+        {friendRequests.map((request: any) => (
+          <li>
+            {request.userId.name}
+            {request.type}
+          </li>
+        )
+        )}
+      </ul>
+
     </div>
   )
 }

@@ -4,19 +4,23 @@ export default async (req, res, next) => {
   const { code } = req.body
 
   try {
-    const user = await User.findOneAndUpdate(
-      { code },
-      { $push: { friendRequests: { userId: req.user._id, type: 'Incoming' } } }
-    )
+    const user = await User.findOne({ code })
     if (!user) return next('USER_NOT_FOUND')
-    // @TODO: handle -> already requested situation
-    console.log(user)
+
+    const existingCheck = user.friendRequests.find(
+      (friendRequest) => friendRequest.userId.toString() === req.user._id
+    )
+    if (existingCheck) return next('REQUEST_ALREADY_EXISTING')
+
+    user.friendRequests.push({ userId: req.user._id, type: 'Incoming' })
+    user.save()
+
     await User.updateOne(
       { _id: req.user._id },
       { $push: { friendRequests: { userId: user._id, type: 'Outgoing' } } }
     );
 
-    res.io.emit('x')
+    res.io.to(user._id).emit('new-friend-request')
     res.send()
   }
   catch (err) {

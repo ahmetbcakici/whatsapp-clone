@@ -41,16 +41,21 @@ const userSchema = new Schema({
 
 userSchema.pre('save', async function (next) {
   const user = this
-  let code, count
 
-  do {
-    code = generateUserCode()
-    count = await User.countDocuments({ code })
-  } while (count)
+  // @TODO: remove if statement here
+  if (!user.code) {
+    let code, count
 
-  user.code = code
+    do {
+      code = generateUserCode()
+      count = await User.countDocuments({ code })
+    } while (count)
 
-  if (user.password) {
+    user.code = code
+  }
+
+
+  if (user.password) { // to prevent crash for google records
     user.password = await bcrypt.hash(user.password, 10)
     next()
   }

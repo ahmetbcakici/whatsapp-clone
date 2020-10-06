@@ -6,36 +6,39 @@ import Welcome from './views/Welcome';
 import Homepage from './views/Homepage';
 import * as userActions from './store/actions/user.actions'
 import * as utils from './utils'
+import { socket } from './config';
 
 function App() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   /* @TODO: remove tsignore */
   // @ts-ignore
-  const user = useSelector((state) => state.userReducer);
+  const user = useSelector((state) => state.userReducer)
 
   useEffect(() => {
-    const jwt = localStorage.getItem('jwt');
+    const jwt = localStorage.getItem('jwt')
 
-    if (!jwt) return;
+    if (!jwt) return
 
     (async function () {
       try {
-        await dispatch(userActions.auth(jwt));
+        await dispatch(userActions.auth(jwt))
       } catch (error) {
         console.log(error)
       }
     })()
-  }, [userActions.auth, dispatch]);
+  }, [userActions.auth, dispatch])
 
   useEffect(() => {
     console.log('user:%o', user)
+    if (user._id)
+      socket.emit('user-connect', user._id)
+
   }, [user])
 
   // @TODO: rendering pages after spinners
   if (!utils.isEmpty(user)) return <Homepage />
 
   return <Welcome />
-  //return utils.isEmpty(user) ? <div>waiting</div> : <Homepage/>
 }
 
 export default App;

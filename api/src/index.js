@@ -16,6 +16,10 @@ app.use(function (req, res, next) {
 io.setMaxListeners(0)
 io.on('connection', (socket) => {
   console.log('socket connection')
+  socket.on('user-connect', (userId) => {
+    console.log("userId:", userId)
+    socket.join(userId)
+  })
 })
 
 http.listen(port, err => {
