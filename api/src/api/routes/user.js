@@ -11,6 +11,6 @@ router.post('/email-verification', emailVerification)
 router.post('/forgot-my-pass', forgotMyPass)
 router.post('/send-confirm-code', sendConfirmCode)
 router.post('/google', google)
-router.post('/send-friend-request', sendFriendRequest)
+router.post('/send-friend-request', auth , sendFriendRequest)
 
 export default router

@@ -2,12 +2,9 @@ import axios from 'axios'
 
 import { API_URL } from '../config'
 
-/* export default ({eventId, pollId, type, answer, options, ownerParticipantId}) =>
-  axios.post(`${API_URL}/poll/answer`, {
-    eventId,
-    pollId,
-    type,
-    answer,
-    options,
-    ownerParticipantId,
-  }); */
+const token = localStorage.getItem('jwt')
+
+export const sendFriendRequest = (code: number) =>
+  axios.post(`${API_URL}/user/send-friend-request`, { code }, {
+    headers: { 'Authorization': token }
+  })

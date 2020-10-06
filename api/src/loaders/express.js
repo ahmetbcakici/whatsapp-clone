@@ -37,9 +37,9 @@ export default ({ app }) => {
     const error = errors.find(error => error.code === err)
     const errorRes = {
       message: error ? error.message : err.message,
-      status: error ? error.status : err.status,
+      status: error ? error.status : err.status || 500,
       documentation_url: err.documentation_url
     }
-    return res.json({ error: errorRes })
+    return res.status(errorRes.status).json({ error: errorRes })
   })
 }
