@@ -13,3 +13,8 @@ export const getFriendRequests = () =>
   axios.get(`${API_URL}/user/get-friend-requests`, {
     headers: { 'Authorization': token }
   })
+
+export const setFriendRequests = (requestId: string, requestedUserId: string, type: boolean) =>
+  axios.patch(`${API_URL}/user/set-friend-request`, { requestId, requestedUserId, type }, {
+    headers: { 'Authorization': token }
+  })

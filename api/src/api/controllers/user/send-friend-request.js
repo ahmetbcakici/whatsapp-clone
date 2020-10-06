@@ -20,7 +20,7 @@ export default async (req, res, next) => {
       { $push: { friendRequests: { userId: user._id, type: 'Outgoing' } } }
     );
 
-    res.io.to(user._id).emit('new-friend-request')
+    res.io.to(user._id).emit('set-friend-request')
     res.send()
   }
   catch (err) {

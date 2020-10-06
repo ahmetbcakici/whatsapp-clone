@@ -1,16 +1,16 @@
 import React, { useState, useEffect, SetStateAction, Dispatch } from 'react'
 
 import { socket } from '../../config'
-import { sendFriendRequest, getFriendRequests } from '../../api/user.requests'
+import { sendFriendRequest, getFriendRequests, setFriendRequests } from '../../api/user.requests'
 
 function FriendRequests({ setContent }: { setContent: Dispatch<SetStateAction<string>> }) {
   const [code, setCode] = useState(0)
-  const [friendRequests, setFriendRequests] = useState([])
+  const [friendRequests, setFriendRequestsData] = useState([])
 
   useEffect(() => {
     handleGetFriendRequests()
 
-    socket.on('new-friend-request', () => {
+    socket.on('set-friend-request', () => {
       handleGetFriendRequests()
     })
   }, [])
@@ -18,7 +18,7 @@ function FriendRequests({ setContent }: { setContent: Dispatch<SetStateAction<st
   const handleGetFriendRequests = async () => {
     try {
       const res = await getFriendRequests()
-      setFriendRequests(res.data.friendRequests)
+      setFriendRequestsData(res.data.friendRequests)
     } catch (error) {
       console.log(error.response.data)
     }
@@ -26,7 +26,16 @@ function FriendRequests({ setContent }: { setContent: Dispatch<SetStateAction<st
 
   const handleSendFriendRequest = async () => {
     try {
-      const res = await sendFriendRequest(code)
+      await sendFriendRequest(code)
+      handleGetFriendRequests()
+    } catch (error) {
+      console.log(error.response.data)
+    }
+  }
+
+  const handleSetFriendRequest = async (requestId: string, requestedUserId: string, type: boolean) => {
+    try {
+      await setFriendRequests(requestId, requestedUserId, type)
       handleGetFriendRequests()
     } catch (error) {
       console.log(error.response.data)
@@ -35,7 +44,7 @@ function FriendRequests({ setContent }: { setContent: Dispatch<SetStateAction<st
 
   return (
     <div>
-      <span onClick={() => setContent('')}>geri dön</span>
+      <span onClick={() => setContent('')}>go back</span>
       friend requests
       <hr />
       <input type="text" onChange={(e) => setCode(parseInt(e.target.value))} />
@@ -43,13 +52,14 @@ function FriendRequests({ setContent }: { setContent: Dispatch<SetStateAction<st
       <ul>
         {friendRequests.map((request: any) => (
           <li>
-            {request.userId.name}
-            {request.type}
+            <span>{request.userId.name} {request.userId.surname} </span>
+            <span>{request.type} </span>
+            {request.type === 'Incoming' && <span onClick={() => handleSetFriendRequest(request._id, request.userId._id, true)}>approve </span>}
+            <span onClick={() => handleSetFriendRequest(request._id, request.userId._id, false)}>{request.type === 'Incoming' ? 'Ignore' : 'Cancel'}</span>
           </li>
         )
         )}
       </ul>
-
     </div>
   )
 }
