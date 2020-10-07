@@ -51,7 +51,7 @@ function FriendRequests({ setContent }: { setContent: Dispatch<SetStateAction<st
       <input type="button" value="SUBMIT" onClick={handleSendFriendRequest} />
       <ul>
         {friendRequests.map((request: any) => (
-          <li>
+          <li key={request._id} >
             <span>{request.userId.name} {request.userId.surname} </span>
             <span>{request.type} </span>
             {request.type === 'Incoming' && <span onClick={() => handleSetFriendRequest(request._id, request.userId._id, true)}>approve </span>}
