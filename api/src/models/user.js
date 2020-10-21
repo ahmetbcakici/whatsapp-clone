@@ -21,6 +21,10 @@ const userSchema = new Schema({
   password: {
     type: String,
   },
+  about:{
+    type:String,
+    maxlength: 150
+  },
   registerDate: {
     type: Date,
     default: Date.now,
