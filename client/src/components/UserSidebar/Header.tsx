@@ -10,8 +10,8 @@ function Header({ setContent }: { setContent: Dispatch<SetStateAction<string>> }
         PP
       </Col>
       <Col sm={5}>
-        <span>S </span>
-        <span>N </span>
+        <span>S</span>
+        <span onClick={(e) => setContent(e.currentTarget.innerHTML)}>N</span>
         <FontAwesomeIcon icon={faCoffee} />
         <span>
           <Dropdown>

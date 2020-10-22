@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { Header, MessagesList, SearchBar, Archived, FriendRequests } from './'
-
+import { Header, MessagesList, SearchBar, Archived, FriendRequests, NewChat } from './'
 function UserSidebar() {
+
   const [content, setContent] = useState('')
 
   switch (content) {
@@ -9,6 +9,8 @@ function UserSidebar() {
       return <FriendRequests setContent={setContent} />
     case 'Archived':
       return <Archived setContent={setContent} />
+    case 'N':
+      return <NewChat setContent={setContent} />
     default:
       return (
         <div>
