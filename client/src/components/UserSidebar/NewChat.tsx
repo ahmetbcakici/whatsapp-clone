@@ -1,25 +1,18 @@
 import { fireEvent } from '@testing-library/react';
 import React, { SetStateAction, Dispatch, useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 
 import { getFriends } from '../../api/user.requests'
-
-interface Friend {
-  _id: String,
-  name: String,
-  surname: String,
-  about: String,
-  avatar: String
-}
+import IFriend from '../../interfaces/friend.interface'
+import * as chatActions from '../../store/actions/chat.actions'
 
 function Archived({ setContent }: { setContent: Dispatch<SetStateAction<string>> }) {
   const [friends, setFriends] = useState([])
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    (async function(){
-      await handleGetFriends();
-      console.log(friends)
-    })()
-  }, [friends])
+    handleGetFriends();
+  }, [])
 
   const handleGetFriends = async () => {
     try {
@@ -31,14 +24,19 @@ function Archived({ setContent }: { setContent: Dispatch<SetStateAction<string>>
     }
   }
 
+  const handleX = (friend : IFriend) => {
+    dispatch(chatActions.setActiveChat(friend))
+  }
+
   return (
     <div>
       <span onClick={() => setContent('')}>go back</span>
       <li>
-        {friends && friends.map((friend: Friend) => {
+        {friends && friends.map((friend: IFriend, index: number) => {
           return (
-            <ul key={friend._id.toString()}>
+            <ul key={index} style={{ background: '#ececec' }} onClick={() => handleX(friend)}>
               <span>{friend.name} {friend.surname}</span>
+              <br />
               <span>{friend.about}</span>
             </ul>
           )

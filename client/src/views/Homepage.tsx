@@ -1,5 +1,6 @@
 import React from 'react'
 import { Col, Row } from 'react-bootstrap'
+import ChatArea from '../components/ChatArea/ChatArea'
 
 import { UserSidebar } from '../components/UserSidebar'
 
@@ -11,8 +12,7 @@ function Homepage() {
           <UserSidebar />
         </Col>
         <Col sm={9} style={{ height: '100vh', background: 'yellow' }}>
-
-
+          <ChatArea />
         </Col>
       </Row>
     </div>

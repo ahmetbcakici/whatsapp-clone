@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import { Header, MessagesList, SearchBar, Archived, FriendRequests, NewChat } from './'
 function UserSidebar() {
 
@@ -13,11 +13,11 @@ function UserSidebar() {
       return <NewChat setContent={setContent} />
     default:
       return (
-        <div>
+        <Fragment>
           <Header setContent={setContent} />
           <SearchBar />
           <MessagesList />
-        </div>
+        </Fragment>
       )
   }
 
