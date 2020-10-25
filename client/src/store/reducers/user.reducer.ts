@@ -1,9 +1,6 @@
-interface Action {
-  type: string
-  payload: object
-}
+import IAction from '../../interfaces/action.interface'
 
-const user = (state: object = {}, action: Action) => {
+const user = (state: object = {}, action: IAction) => {
   const { type, payload } = action
 
   switch (type) {
