@@ -9,7 +9,8 @@ export default async (req, res, next) => {
   const { email, password } = req.body
 
   try {
-    await loginSchema.validateAsync(req.body)
+    // @TODO: uncomment validation
+    // await loginSchema.validateAsync(req.body)
 
     const user = await User.findOne({ email })
     if (!user) return next('USER_NOT_FOUND')
@@ -22,6 +23,7 @@ export default async (req, res, next) => {
     res.status(200).json({ user, token })
   }
   catch (err) {
+    console.log(err)
     return next(err)
   }
 }
