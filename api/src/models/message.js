@@ -1,18 +1,15 @@
 import { model, Schema } from 'mongoose'
 
 const messageSchema = new Schema({
-    key: "value",
-    /*
-    user1Id,
-    user2Id,
-    chat:{
-        senderId,
-        text:
-        seen?
-        starred?
-        etc...
-    }
-     */
+    //status:,
+    sentAt: {
+        type: Date,
+        default: Date.now
+    },
+    sentBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    starredBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    removedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    text: String,
 })
 
 const Message = model('Message', messageSchema)
