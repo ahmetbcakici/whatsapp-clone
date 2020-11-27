@@ -35,7 +35,7 @@ function Archived({ setContent }: { setContent: Dispatch<SetStateAction<string>>
         {friends && friends.map((friend: IFriend, index: number) => {
           return (
             <ul key={index} style={{ background: '#ececec' }} onClick={() => handleX(friend)}>
-              <span>{friend.name} {friend.surname}</span>
+              <span>{friend.name}</span>
               <br />
               <span>{friend.about}</span>
             </ul>

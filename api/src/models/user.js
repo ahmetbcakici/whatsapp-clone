@@ -8,10 +8,6 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  surname: {
-    type: String,
-    required: true,
-  },
   email: {
     type: String,
     required: true,
@@ -21,8 +17,11 @@ const userSchema = new Schema({
   password: {
     type: String,
   },
-  about:{
-    type:String,
+  avatarPath: {
+    type: String,
+  },
+  about: {
+    type: String,
     maxlength: 150
   },
   registerDate: {
@@ -40,7 +39,9 @@ const userSchema = new Schema({
       enum: ['Incoming', 'Outgoing']
     }
   }],
-  friends: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+  friends: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  starredMessages: [{ type: Schema.Types.ObjectId, ref: 'Message' }],
+  chats: [{ type: Schema.Types.ObjectId, ref: 'Chat' }]
 })
 
 userSchema.pre('save', async function (next) {

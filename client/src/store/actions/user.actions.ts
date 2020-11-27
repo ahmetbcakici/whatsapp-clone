@@ -22,14 +22,13 @@ export const login = (email: string, password: string) => (dispatch: ThunkDispat
     }
   });
 
-export const register = (name: string, surname: string, email: string, password: string) => (dispatch: ThunkDispatch<{}, {}, AnyAction>) =>
+export const register = (name: string, email: string, password: string) => (dispatch: ThunkDispatch<{}, {}, AnyAction>) =>
   new Promise(async (resolve, reject) => {
     try {
       const {
         data: { user, token },
       } = await axios.post(`${API_URL}/user/register`, {
         name,
-        surname,
         email,
         password,
       });

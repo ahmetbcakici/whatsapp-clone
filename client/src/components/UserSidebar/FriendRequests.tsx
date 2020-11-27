@@ -52,7 +52,7 @@ function FriendRequests({ setContent }: { setContent: Dispatch<SetStateAction<st
       <ul>
         {friendRequests.map((request: any) => (
           <li key={request._id} >
-            <span>{request.userId.name} {request.userId.surname} </span>
+            <span>{request.userId.name} </span>
             <span>{request.type} </span>
             {request.type === 'Incoming' && <span onClick={() => handleSetFriendRequest(request._id, request.userId._id, true)}>approve </span>}
             <span onClick={() => handleSetFriendRequest(request._id, request.userId._id, false)}>{request.type === 'Incoming' ? 'Ignore' : 'Cancel'}</span>

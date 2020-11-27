@@ -1,7 +1,8 @@
 import { model, Schema } from 'mongoose'
 
 const messageSchema = new Schema({
-    //status:,
+    //status:,sent, delivered, seen
+    // chatId
     sentAt: {
         type: Date,
         default: Date.now

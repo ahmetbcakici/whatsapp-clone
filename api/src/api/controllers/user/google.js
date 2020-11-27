@@ -14,8 +14,7 @@ export default async (req, res) => {
 
   const obj = {
     email: data.payload.email,
-    name: data.payload.given_name,
-    surname: data.payload.family_name
+    name: `${data.payload.given_name} ${data.payload.family_name}`,
   }
 
   switch (type) {

@@ -8,7 +8,6 @@ import * as userActions from '../store/actions/user.actions'
 function Login({ setIsLogin }: { setIsLogin: Dispatch<SetStateAction<boolean>> }) {
   const dispatch = useDispatch()
   const [name, setName] = useState('')
-  const [surname, setSurname] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
@@ -24,7 +23,7 @@ function Login({ setIsLogin }: { setIsLogin: Dispatch<SetStateAction<boolean>> }
   const handleRegister = async (e: { preventDefault: () => void }) => {
     e.preventDefault()
     try {
-      const res = await dispatch(userActions.register(name, surname, email, password))
+      const res = await dispatch(userActions.register(name, email, password))
     } catch (error) {
       console.log(error)
     }
@@ -40,12 +39,6 @@ function Login({ setIsLogin }: { setIsLogin: Dispatch<SetStateAction<boolean>> }
             <Form.Group controlId='formBasicName'>
               <Form.Label>First name</Form.Label>
               <Form.Control type='text' placeholder='Your first name' className='bg-transparent border-top-0 border-right-0 border-left-0' onChange={(e) => setName(e.target.value)} />
-            </Form.Group>
-          </Col>
-          <Col>
-            <Form.Group controlId='formBasicSurname'>
-              <Form.Label>Last name</Form.Label>
-              <Form.Control type='text' placeholder='Your last name' className='border-top-0' onChange={(e) => setSurname(e.target.value)} />
             </Form.Group>
           </Col>
         </Row>

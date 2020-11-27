@@ -4,7 +4,7 @@ export default async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id)
       .select({ friends: 1 })
-      .populate('friends', 'name surname about')
+      .populate('friends', 'name about')
 
     res.send(user)
   }
