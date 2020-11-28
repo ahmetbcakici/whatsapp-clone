@@ -2,7 +2,7 @@ import { model, Schema } from 'mongoose'
 
 const messageSchema = new Schema({
     //status:,sent, delivered, seen
-    // chatId
+    chatId: { type: mongoose.Schema.Types.ObjectId, ref: 'Chat' },
     sentAt: {
         type: Date,
         default: Date.now
@@ -10,7 +10,10 @@ const messageSchema = new Schema({
     sentBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     starredBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     removedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    text: String,
+    text:{
+        type: String,
+        maxlength: 50000
+    },
 })
 
 const Message = model('Message', messageSchema)

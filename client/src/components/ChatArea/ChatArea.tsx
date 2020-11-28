@@ -14,9 +14,9 @@ function ChatArea() {
 
   return (
     <Fragment>
-      <ChatStick chattingWith={chattingWith}/>
-      <Messages chattingWith={chattingWith}/>
-      <SendMessageStick chattingWith={chattingWith}/>
+      <ChatStick chattingWith={chattingWith} />
+      <Messages chattingWith={chattingWith} />
+      <SendMessageStick chattingWith={chattingWith} />
     </Fragment>
   )
 }
