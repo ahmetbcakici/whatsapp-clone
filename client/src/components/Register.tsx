@@ -24,6 +24,7 @@ function Login({ setIsLogin }: { setIsLogin: Dispatch<SetStateAction<boolean>> }
     e.preventDefault()
     try {
       const res = await dispatch(userActions.register(name, email, password))
+      console.log(res)
     } catch (error) {
       console.log(error)
     }

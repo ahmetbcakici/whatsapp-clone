@@ -1,7 +1,7 @@
 import React, { useState, useEffect, SetStateAction, Dispatch } from 'react'
 
 import { socket } from '../../config'
-import { sendFriendRequest, getFriendRequests, setFriendRequests } from '../../api/user.requests'
+import { sendFriendRequest, getFriendRequests, setFriendRequestsState } from '../../api/user.requests'
 
 function FriendRequests({ setContent }: { setContent: Dispatch<SetStateAction<string>> }) {
   const [code, setCode] = useState(0)
@@ -10,7 +10,7 @@ function FriendRequests({ setContent }: { setContent: Dispatch<SetStateAction<st
   useEffect(() => {
     handleGetFriendRequests()
 
-    socket.on('set-friend-request', () => {
+    socket.on('set-friend-request-state', () => {
       handleGetFriendRequests()
     })
   }, [])
@@ -33,9 +33,9 @@ function FriendRequests({ setContent }: { setContent: Dispatch<SetStateAction<st
     }
   }
 
-  const handleSetFriendRequest = async (requestId: string, requestedUserId: string, type: boolean) => {
+  const handleSetFriendRequestState = async (requestId: string, requestedUserId: string, isApproved: boolean) => {
     try {
-      await setFriendRequests(requestId, requestedUserId, type)
+      await setFriendRequestsState(requestId, requestedUserId, isApproved)
       handleGetFriendRequests()
     } catch (error) {
       console.log(error.response.data)
@@ -50,12 +50,12 @@ function FriendRequests({ setContent }: { setContent: Dispatch<SetStateAction<st
       <input type="text" onChange={(e) => setCode(parseInt(e.target.value))} />
       <input type="button" value="SUBMIT" onClick={handleSendFriendRequest} />
       <ul>
-        {friendRequests.map((request: any) => (
+        {friendRequests.map((request: any/*TODO: any???*/) => (
           <li key={request._id} >
             <span>{request.userId.name} </span>
             <span>{request.type} </span>
-            {request.type === 'Incoming' && <span onClick={() => handleSetFriendRequest(request._id, request.userId._id, true)}>approve </span>}
-            <span onClick={() => handleSetFriendRequest(request._id, request.userId._id, false)}>{request.type === 'Incoming' ? 'Ignore' : 'Cancel'}</span>
+            {request.type === 'Incoming' && <span onClick={() => handleSetFriendRequestState(request._id, request.userId._id, true)}>approve </span>}
+            <span onClick={() => handleSetFriendRequestState(request._id, request.userId._id, false)}>{request.type === 'Incoming' ? 'Ignore' : 'Cancel'}</span>
           </li>
         )
         )}

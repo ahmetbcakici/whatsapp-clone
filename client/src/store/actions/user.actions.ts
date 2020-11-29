@@ -55,10 +55,10 @@ export const auth = (token: string) => (dispatch: ThunkDispatch<{}, {}, AnyActio
     }
   });
 
-export const responseGoogle = (token: string, type: string) => (dispatch: ThunkDispatch<{}, {}, AnyAction>) =>
+export const responseGoogle = (token: string, operation: string) => (dispatch: ThunkDispatch<{}, {}, AnyAction>) =>
   new Promise(async (resolve, reject) => {
     try {
-      const { data } = await axios.post(`${API_URL}/user/google`, { token, type });
+      const { data } = await axios.post(`${API_URL}/user/google`, { token, operation });
       dispatch({ type: 'SET_USER', payload: data });
       return resolve()
     } catch (error) {
