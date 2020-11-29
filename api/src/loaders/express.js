@@ -35,6 +35,7 @@ export default ({ app }) => {
   /// error handler
   app.use((err, req, res, next) => {
     const error = errors.find(error => error.code === err)
+    console.log(error)
     const errorRes = {
       message: error ? error.message : err.message,
       status: error ? error.status : err.status || 500,

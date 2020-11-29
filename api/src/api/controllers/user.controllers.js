@@ -1,233 +1,149 @@
-import jwt from 'jsonwebtoken'
-import bcrypt from 'bcryptjs'
-import { OAuth2Client } from 'google-auth-library'
+import { emailVerificationSchema, emailSchema, loginSchema, registerSchema } from '../validators/user.validators'
+import * as userService from '../services/user.services'
 
 
-import { emailVerificationSchema, emailSchema ,loginSchema,registerSchema} from '../validators/user.validators'
-import { api } from '../../config'
-import { User } from '../../models'
-import { sendCodeToEmail } from '../../utils'
+export const verifyEmail = async (req, res, next) => {
+  const { code, token } = req.body
 
-const client = new OAuth2Client(api.googleClientId);
+  try {
+    await emailVerificationSchema.validateAsync(req.body)
 
-export const emailVerification = async (req, res, next) => {
-    const { code, token } = req.body
+    const response = await userService.verifyEmail(code, token)
 
-    try {
-        await emailVerificationSchema.validateAsync(req.body)
-
-        const { confirmCode } = await jwt.verify(token, api.jwtSecretKey)
-
-        if (code !== confirmCode) return next('INCORRECT_CONFIRM_CODE')
-
-        return res.status(200).send()
-    } catch (err) {
-        return next(err)
-    }
+    return res.status(200).send(response)
+  } catch (err) {
+    return next(err)
+  }
 }
 
-export const forgotMyPass = async (req, res, next) => {
-    const { email } = req.body;
-    const newPassword = '123' //generateRandomCode(6)
+export const resetPassword = async (req, res, next) => {
+  const { email } = req.body;
 
-    try {
-        await emailSchema.validateAsync(req.body)
+  try {
+    await emailSchema.validateAsync(req.body)
 
-        const hash = await bcrypt.hash(newPassword, 10)
+    const response = await userService.resetPassword(email)
 
-        const user = await User.findOneAndUpdate(
-            { email },
-            { password: hash },
-            { new: true }
-        );
-
-        if (!user) return next('NO_USER_WITH_THIS_EMAIL')
-
-        console.log(newPassword)
-        /* await sendCodeToEmail({email, newPassword}); */
-        return res.status(200).send()
-    }
-    catch (err) {
-        return next(err)
-    }
+    return res.status(200).send(response)
+  }
+  catch (err) {
+    return next(err)
+  }
 }
 
 export const getFriendRequests = async (req, res, next) => {
-    try {
-        const user = await User.findById(req.user._id)
-            .select({ friendRequests: 1 })
-            .populate('friendRequests.userId', 'name')
+  const userId = req.user._id
 
-        res.send(user)
-    }
-    catch (err) {
-        console.log(err)
-        return next(err)
-    }
+  try {
+    const response = await userService.getFriendRequests(userId)
+
+    return res.status(200).send(response)
+  }
+  catch (err) {
+    console.log(err)
+    return next(err)
+  }
 }
 
 export const getFriends = async (req, res, next) => {
-    try {
-        const user = await User.findById(req.user._id)
-            .select({ friends: 1 })
-            .populate('friends', 'name about')
+  const userId = req.user._id
 
-        res.send(user)
-    }
-    catch (err) {
-        console.log(err)
-        return next(err)
-    }
+  try {
+    const response = await userService.getFriends(userId)
+
+    return res.status(200).send(response)
+  }
+  catch (err) {
+    console.log(err)
+    return next(err)
+  }
 }
 
-export const google = async (req, res) => {
-    const { token, type } = req.body;
+export const provideGoogleAuth = async (req, res) => {
+  const { token, operation } = req.body;
 
-    const data = await client.verifyIdToken({
-        idToken: token,
-        audience: api.googleClientId
-    })
+  try {
+    const response = await userService.provideGoogleAuth(token, operation)
 
-    const obj = {
-        email: data.payload.email,
-        name: `${data.payload.given_name} ${data.payload.family_name}`,
-    }
-
-    switch (type) {
-        case 'register': {
-            const user = await User.create(obj)
-            return res.send(user)
-        }
-        case 'login': {
-            const user = await User.findOne({ email: obj.email })
-            return res.send(user)
-        }
-    }
-    res.send(token);
-    // @TODO: error handling
+    return res.status(200).send(response)
+  } catch (err) {
+    console.log(err)
+    return next(err)
+  }
 }
 
 export const login = async (req, res, next) => {
-    const { email, password } = req.body
-  
-    try {
-      // @TODO: uncomment validation
-      // await loginSchema.validateAsync(req.body)
-  
-      const user = await User.findOne({ email })
-      if (!user) return next('USER_NOT_FOUND')
-  
-      const match = await bcrypt.compare(password, user.password)
-      if (!match) return next('INCORRECT_PASSWORD')
-  
-      user.password = null
-      const token = await jwt.sign({ user }, api.jwtSecretKey)
-      res.status(200).json({ user, token })
-    }
-    catch (err) {
-      console.log(err)
-      return next(err)
-    }
-  }
+  const { email, password } = req.body
 
-  export const register = async (req, res, next) => {
-    try {
-      // @TODO: uncomment validation
-      /* await registerSchema.validateAsync(req.body) */
-  
-      const user = await User.create(req.body)
-      user.password = null // prevent send pw to client
-      req.body.password = null // prevent log pw
-  
-      logger.info("registerUser:" + JSON.stringify(req.body))
-      const token = await jwt.sign({ user }, api.jwtSecretKey)
-  
-      return res.status(201).json({ user, token })
-    }
-    catch (err) {
-      return next(err)
-    }
-  }
+  try {
+    await loginSchema.validateAsync(req.body)
 
-  export const sendConfirmCode = async (req, res, next) => {
-    const { email } = req.body
-    const confirmCode = '123' //generateRandomCode(6)
-  
-    try {
-      await emailSchema.validateAsync(req.body)
-  
-      /* @TODO: invalid e-mail check */
-  
-      const existingEmailCount = await User.countDocuments({ email })
-      if (existingEmailCount) return next('EMAIL_ALREADY_REGISTERED')
-  
-      console.log(confirmCode)
-      /* await sendCodeToEmail({email, confirmCode}); */
-      const token = await jwt.sign({ confirmCode }, api.jwtSecretKey)
-      return res.status(200).json({ token })
-    }
-    catch (err) {
-      return next(err)
-    }
-  }
+    const response = await userService.login(email, password)
 
-  export const sendFriendRequest = async (req, res, next) => {
-    const { code } = req.body
-  
-    try {
-      const user = await User.findOne({ code })
-      if (!user) return next('USER_NOT_FOUND')
-  
-      const existingCheck = user.friendRequests.find(
-        (friendRequest) => friendRequest.userId.toString() === req.user._id
-      )
-      if (existingCheck) return next('REQUEST_ALREADY_EXISTING')
-  
-      user.friendRequests.push({ userId: req.user._id, type: 'Incoming' })
-      user.save()
-  
-      await User.updateOne(
-        { _id: req.user._id },
-        { $push: { friendRequests: { userId: user._id, type: 'Outgoing' } } }
-      );
-  
-      res.io.to(user._id).emit('set-friend-request')
-      res.send()
-    }
-    catch (err) {
-      console.log(err)
-      return next(err)
-    }
+    return res.status(200).send(response)
   }
+  catch (err) {
+    console.log(err)
+    return next(err)
+  }
+}
 
-  export const setFriendRequestState = async (req, res, next) => {
-    const { requestId, requestedUserId, type } = req.body
-    try {
-      const currentUser = await User.findById(req.user._id)
-      if (!currentUser) return next('USER_NOT_FOUND')
-  
-      const requestedUser = await User.findById(requestedUserId)
-      if (!requestedUser) return next('USER_NOT_FOUND')
-  
-      const requestToRemove = requestedUser.friendRequests.find(
-        (friendRequest) => friendRequest.userId.toString() == req.user._id
-      )
-  
-      if (type) {
-        requestedUser.friends.push(currentUser._id)
-        currentUser.friends.push(requestedUserId)
-      }
-  
-      requestedUser.friendRequests.remove(requestToRemove._id)
-      currentUser.friendRequests.remove(requestId)
-      requestedUser.save()
-      currentUser.save()
-  
-      res.io.to(requestedUserId).emit('set-friend-request')
-      res.send()
-    }
-    catch (err) {
-      console.log(err)
-      return next(err)
-    }
+export const register = async (req, res, next) => {
+  try {
+    /*await registerSchema.validateAsync(req.body)*/
+
+    const response = await userService.register(req.body)
+
+    return res.status(201).json(response)
   }
+  catch (err) {
+    return next(err)
+  }
+}
+
+export const sendConfirmCode = async (req, res, next) => {
+  const { email } = req.body
+
+  try {
+    await emailSchema.validateAsync(req.body)
+
+    const response = await userService.sendConfirmCode(email)
+
+    return res.status(200).json(response)
+  }
+  catch (err) {
+    return next(err)
+  }
+}
+
+export const sendFriendRequestByUserCode = async (req, res, next) => {
+  const { code } = req.body
+  const currentUserId = req.user._id
+
+  try {
+    const { response, requestedUserId } = await userService.sendFriendRequestByUserCode(code, currentUserId)
+
+    res.io.to(requestedUserId).emit('set-friend-request-state')
+    return res.status(200).json(response)
+  }
+  catch (err) {
+    console.log(err)
+    return next(err)
+  }
+}
+
+export const setFriendRequestState = async (req, res, next) => {
+  const { requestId, requestedUserId, isApproved } = req.body
+  const currentUserId = req.user._id
+
+  try {
+    const response = await userService.setFriendRequestState(currentUserId, requestId, requestedUserId, isApproved)
+
+    res.io.to(requestedUserId).emit('set-friend-request-state')
+    return res.status(200).json(response)
+  }
+  catch (err) {
+    console.log(err)
+    return next(err)
+  }
+}
